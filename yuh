@@ -1,0 +1,107 @@
+import streamlit as st
+import random
+
+st.set_page_config(page_title="🌍 Gelecek Dünya Simülasyonu", layout="wide")
+st.title("🌍 Gelecek Dünya Simülasyonu")
+st.write("Senin seçimlerin dünyayı şekillendiriyor! 🌱🌎")
+
+# Başlangıç değerleri
+if "gun" not in st.session_state:
+    st.session_state.gun = 1
+if "co2" not in st.session_state:
+    st.session_state.co2 = 50  # 0-100 arası, 100 = felaket
+if "dunya" not in st.session_state:
+    st.session_state.dunya = []
+
+st.subheader(f"Gün {st.session_state.gun}")
+
+# Kullanıcı seçimleri
+beslenme = st.radio("🥗 Ne yiyorsun bugün?", ["et", "sebze", "vegan"])
+ulasim = st.radio("🚗 Ulaşım şeklin?", ["araba", "bisiklet", "toplu taşıma", "yürüyüş", "uçan araba"])
+enerji = st.radio("⚡ Enerji kaynağın?", ["fosil", "yenilenebilir", "nükleer", "karma"])
+eglence = st.radio("🎮 Boş zaman aktiviten?", ["video oyun", "doğa yürüyüşü", "spor", "film", "kitap"])
+
+# Seçimi uygula
+def dunya_tur():
+    co2_change = 0
+    olaylar = []
+
+    # Beslenme etkisi
+    if beslenme == "et":
+        co2_change += 5
+        olaylar.append("🌡️ Et yemek CO₂ arttırdı.")
+    elif beslenme == "sebze":
+        co2_change += 1
+        olaylar.append("🥦 Sebze yemek biraz CO₂ üretti.")
+    else:
+        co2_change -= 1
+        olaylar.append("🌱 Vegan beslendin, CO₂ azaldı.")
+
+    # Ulaşım etkisi
+    if ulasim == "araba":
+        co2_change += 5
+        olaylar.append("🚗 Araba kullandın, CO₂ arttı.")
+    elif ulasim in ["bisiklet", "yürüyüş"]:
+        co2_change -= 2
+        olaylar.append("🚴‍♂️ Bisiklet/yürüyüş CO₂ azalttı.")
+    elif ulasim == "toplu taşıma":
+        co2_change -= 1
+        olaylar.append("🚌 Toplu taşıma CO₂’yi biraz azalttı.")
+    else:
+        co2_change -= 1
+        olaylar.append("🚀 Uçan araba CO₂ dengelendi.")
+
+    # Enerji etkisi
+    if enerji == "fosil":
+        co2_change += 5
+        olaylar.append("💨 Fosil enerji CO₂’yi artırdı.")
+    elif enerji == "yenilenebilir":
+        co2_change -= 3
+        olaylar.append("🔋 Yenilenebilir enerji CO₂’yi azalttı.")
+    elif enerji == "nükleer":
+        co2_change += 0
+        olaylar.append("☢️ Nükleer enerji dengede kaldı.")
+    else:
+        co2_change += random.randint(-1, 2)
+        olaylar.append("⚡ Karma enerji değişken etkili oldu.")
+
+    # Eğlence etkisi (ufak etkiler)
+    if eglence == "doğa yürüyüşü":
+        co2_change -= 1
+        olaylar.append("🌳 Doğa yürüyüşü CO₂’yi azalttı.")
+    elif eglence == "video oyun":
+        co2_change += 0
+        olaylar.append("🎮 Video oyun etkisi nötr.")
+    elif eglence == "spor":
+        co2_change -= 1
+        olaylar.append("🏋️ Spor CO₂’yi biraz azalttı.")
+    elif eglence == "film":
+        co2_change += 0
+        olaylar.append("🎬 Film etkisi nötr.")
+    else:
+        co2_change -= 1
+        olaylar.append("📚 Kitap okumak CO₂’yi azalttı.")
+
+    # CO₂ değerini güncelle
+    st.session_state.co2 += co2_change
+    st.session_state.co2 = max(0, min(100, st.session_state.co2))  # 0-100 arası sınırla
+    st.session_state.dunya.append(f"Gün {st.session_state.gun}: " + ", ".join(olaylar))
+    st.session_state.gun += 1
+
+# Buton ile turu başlat
+if st.button("Günü Tamamla"):
+    dunya_tur()
+
+# Durumu göster
+st.subheader("🌎 Dünya Durumu")
+for satir in st.session_state.dunya:
+    st.write(" - " + satir)
+
+st.write(f"🔥 CO₂ Seviyesi: {st.session_state.co2}/100")
+
+# Felaket kontrolü
+if st.session_state.co2 >= 100:
+    st.error("⚠️ CO₂ çok yüksek! Dünya büyük bir felaketle karşı karşıya!")
+    st.stop()
+elif st.session_state.co2 <= 10:
+    st.success("🌱 CO₂ çok düşük! Dünya çok sağlıklı ve dengede!")
