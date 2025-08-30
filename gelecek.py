@@ -1,49 +1,44 @@
 import random
+import streamlit as st
 
-def gelecek_dunya():
-    print("🌍 Gelecek Dünya Üreticisine Hoş Geldin!")
-    print("Birkaç soruya cevap ver, sana gelecekte dünyanın nasıl görüneceğini anlatayım...\n")
+st.title("🌍 Gelecek Dünya Üreticisi")
+st.write("Birkaç seçim yap, gelecekte dünyanın nasıl görüneceğini öğren! 🚀")
 
-    # Sorular
-    beslenme = input("🥗 Daha çok ne yersin? (et / sebze): ").strip().lower()
-    ulasim = input("🚗 Daha çok nasıl ulaşım sağlarsın? (araba / bisiklet / toplu taşıma / yürüyüş): ").strip().lower()
-    enerji = input("⚡ Enerjinin çoğu nereden geliyor? (yenilenebilir / fosil): ").strip().lower()
+# Kullanıcı seçimleri
+beslenme = st.selectbox("🥗 Daha çok ne yersin?", ["Seç...", "Et", "Sebze"])
+ulasim = st.selectbox("🚗 Ulaşımı nasıl tercih edersin?", ["Seç...", "Araba", "Bisiklet", "Toplu taşıma", "Yürüyüş"])
+enerji = st.selectbox("⚡ Enerji kaynağın daha çok hangisi?", ["Seç...", "Yenilenebilir", "Fosil"])
 
-    # Olası senaryolar
+if st.button("🔮 Geleceği Gör"):
     gelecek = []
 
-    if beslenme == "et":
-        gelecek.append("🌡️ 2070’te inekler insanlardan fazla ve saldıkları metan yüzünden dünya dev bir fırın gibi ısınıyor.")
-    elif beslenme == "sebze":
+    if beslenme == "Et":
+        gelecek.append("🌡️ 2070’te inekler insanlardan fazla ve dünya dev bir fırın gibi ısınıyor.")
+    elif beslenme == "Sebze":
         gelecek.append("🥦 2070’te sebzeler dünyayı ele geçiriyor ve brokoli para birimi oluyor.")
 
-    if "araba" in ulasim:
-        gelecek.append("🚦 Trafik sıkışıklığı artık kıtalar arası, ama uçan arabalar biraz olsun eğlenceli.")
-    elif "bisiklet" in ulasim:
+    if ulasim == "Araba":
+        gelecek.append("🚦 Trafik artık kıtalar arası, ama uçan arabalar biraz olsun eğlenceli.")
+    elif ulasim == "Bisiklet":
         gelecek.append("🚴 2100’de insanların bacakları süper güçlü ve 'Dünya Turu' en büyük spor etkinliği.")
-    elif "toplu" in ulasim:
-        gelecek.append("🚌 Toplu taşıma o kadar gelişti ki ışınlanan otobüsler sıradan hale geldi.")
-    elif "yürüyüş" in ulasim:
-        gelecek.append("👟 İnsanlar o kadar yürüyor ki şehirler dev yürüyen kaldırımlarla birbirine bağlanıyor.")
+    elif ulasim == "Toplu taşıma":
+        gelecek.append("🚌 Işınlanan otobüsler sıradan hale geldi.")
+    elif ulasim == "Yürüyüş":
+        gelecek.append("👟 İnsanlar o kadar yürüyor ki şehirler dev yürüyen kaldırımlarla bağlanıyor.")
 
-    if "yenilenebilir" in enerji:
+    if enerji == "Yenilenebilir":
         gelecek.append("🔋 Güneş ağaçları tüm şehirleri besliyor ve gece gökyüzü yeşil ışıklarla parlıyor.")
-    elif "fosil" in enerji:
-        gelecek.append("💨 Hava o kadar kirli ki insanlar gün batımını görmek için canlı yayın izliyor.")
+    elif enerji == "Fosil":
+        gelecek.append("💨 Hava o kadar kirli ki gün batımı izlemek için canlı yayın açılıyor.")
 
-    # Rastgele eğlenceli bir ekleme
     ekstra = random.choice([
-        "🐧 Penguenler Antarktika’da bağımsızlık ilan etti ve kendi krallıklarını kurdu.",
-        "🤖 Robotlar yosun yetiştirip hem yakıt üretiyor hem de yemek programı sunuyor.",
-        "🐉 Dumanlardan oluşan bir ejderha gökyüzünde dolaşıyor ama şaşırtıcı şekilde dost canlısı.",
+        "🐧 Penguenler Antarktika’da bağımsızlık ilan etti.",
+        "🤖 Robotlar yosun yetiştirip yemek programı sunuyor.",
+        "🐉 Dumanlardan oluşan bir ejderha gökyüzünde dolaşıyor ama dost canlısı.",
         "🌌 İnsanlar Mars’a taşındı ama hâlâ WiFi’den şikayet ediyor."
     ])
     gelecek.append(ekstra)
 
-    # Sonuç
-    print("\n✨ Senin Gelecek Dünya Senaryon ✨")
+    st.subheader("✨ Senin Gelecek Dünya Senaryon ✨")
     for satir in gelecek:
-        print(" - " + satir)
-
-if __name__ == "__main__":
-    gelecek_dunya()
+        st.write("- " + satir)
